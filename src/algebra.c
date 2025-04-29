@@ -117,7 +117,7 @@ double det_matrix(Matrix a)
             }
             double row_num=0.0;
             row_num=a.data[i][0]*pn_num*det_matrix(c);
-            for (int i = 0; i < m.rows; i++) {
+            for (int i = 0; i < c.rows; i++) {
                 free(c.data[i]);
             }
             free(c.data);
@@ -157,19 +157,19 @@ int rank_matrix(Matrix a)
             }
         }
         double xx=c.data[row][ii];
-        for(int k=ii;k<a.cols;k++)c.data[row][j]/=xx;
+        for(int k=ii;k<a.cols;k++)c.data[row][k]/=xx;
         for(int kk=0;kk<a.rows;kk++){
             if(kk!=row){
                 double mul=c.data[kk][ii];
-                for(int j=col;j<n;j++){
-                    m2[kk][k]-=mul*c.data[row][k];
+                for(int j=ii;j<a.cols;j++){
+                    c.data[kk][j]-=mul*c.data[row][j];
                 }
             }
         }
         row++;
     }
     int rank=row;
-    for (int i = 0; i < m.rows; i++) {
+    for (int i = 0; i < c.rows; i++) {
         free(c.data[i]);
     }
     free(c.data);

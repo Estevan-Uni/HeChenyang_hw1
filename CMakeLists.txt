@@ -1,9 +1,15 @@
-project (main)
+cmake_minimum_required(VERSION 3.10)
+project(MyProject C)
 
-set (EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
+set(CMAKE_C_STANDARD 99)
 
-aux_source_directory (src SRC_LIST)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR}/bin)
 
-include_directories (inc)
+include_directories(${CMAKE_SOURCE_DIR}/inc)
 
-add_executable (main ${SRC_LIST})
+set(SOURCES
+    ${CMAKE_SOURCE_DIR}/src/main.c
+    ${CMAKE_SOURCE_DIR}/src/algebra.c
+)
+
+add_executable(my_program ${SOURCES})
