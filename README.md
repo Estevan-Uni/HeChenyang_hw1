@@ -68,7 +68,11 @@ Matrix add_matrix(Matrix a, Matrix b)
 
 #### 2.1.3 输出示例  
 
-![](D:\hcy\x-labPRE\HW1\HeChenyang_hw1\doc\picture\+1.png) ![](C:\Users\he'chen'yang\Desktop\tp\+2.png)![](C:\Users\he'chen'yang\Desktop\tp\+3.png)![](C:\Users\he'chen'yang\Desktop\tp\+4.png)
+<img src="./doc/+1.png" />
+
+
+
+![](.\doc\+1.png) ![](C:\Users\he'chen'yang\Desktop\tp\+2.png)![](C:\Users\he'chen'yang\Desktop\tp\+3.png)![](C:\Users\he'chen'yang\Desktop\tp\+4.png)
 
   
 
