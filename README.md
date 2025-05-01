@@ -109,3 +109,55 @@ Matrix sub_matrix(Matrix a, Matrix b)
 
 #### 2.2.3 输出示例  
 
+<img src="./doc/sub/-1.png">    <img src="./doc/sub/-2.png">    <img src="./doc/sub/-3.png">  
+
+<img src="./doc/sub/-4.png">  
+
+
+
+### 2.3 乘法的实现  
+
+#### 2.3.1 思路简介  
+
+存在于` Matrix`结构中的一个矩阵（以一个二维数组的形式储存）与另一个存在于`Matrix`结构中的矩阵相乘，要求第一个矩阵的列数与第二个矩阵的行数相同，设第一个矩阵为m $\times$ n的矩阵A，第二个矩阵为n $ \times$ p的矩阵B，则乘法运算的结果为一个m$\times$p的矩阵C，其中$c_{ij}$的计算法则如下：  
+$$
+c_{ij}=\sum^{n}_{k=1}a_{ik}b_{kj}
+$$
+若第一个矩阵的列数与第二个矩阵的行数不相等，无法进行矩阵的乘法运算，则报错。  
+
+#### 2.3.2 代码实现  
+
+``````c
+Matrix mul_matrix(Matrix a, Matrix b)
+{
+    if (a.cols!=b.rows) {
+        printf("Error: The number of cols of matrix a must be equal to the number of rows of matrix b.\n");
+        Matrix c=create_matrix(0,0);
+        return c;
+    }
+    /*
+    若第一个矩阵的列数与第二个矩阵的行数不相等，无法进行矩阵的乘法运算，报错
+    */
+    else{
+        Matrix c=create_matrix(a.rows,b.cols);
+        for (int i=0;i<c.rows;i++) {
+            for (int j=0;j<c.cols;j++) {
+                double c_num=0.0;
+                for (int k=0;k<a.cols;k++) {
+                    c_num +=a.data[i][k]*b.data[k][j];
+                }
+            c.data[i][j] = c_num;
+            }
+        }
+        return c;
+    }
+    /*
+    生成一个m*p的矩阵C，每个元素遍历求解
+    */
+}
+``````
+
+#### 2.3.3 输出示例  
+
+
+
