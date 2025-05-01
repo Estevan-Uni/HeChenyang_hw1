@@ -44,7 +44,6 @@ Matrix sub_matrix(Matrix a, Matrix b)
         }
         return c;    
     }
-    return create_matrix(0,0);
 }
 
 Matrix mul_matrix(Matrix a, Matrix b)

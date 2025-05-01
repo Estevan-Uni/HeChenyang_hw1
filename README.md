@@ -68,13 +68,10 @@ Matrix add_matrix(Matrix a, Matrix b)
 
 #### 2.1.3 输出示例  
 
-<img src="./doc/+1.png" />
+<img src="./doc/add/+1.png">     <img src="./doc/add/+2.png">    <img src="./doc/add/+3.png">    <img src="./doc/add/+4.png">  
 
 
 
-![](.\doc\+1.png) ![](C:\Users\he'chen'yang\Desktop\tp\+2.png)![](C:\Users\he'chen'yang\Desktop\tp\+3.png)![](C:\Users\he'chen'yang\Desktop\tp\+4.png)
-
-  
 
 ### 2.2 减法的实现  
 
