@@ -294,3 +294,115 @@ double det_matrix(Matrix a)
 
 ### 2.7 矩阵求逆的实现  
 
+#### 2.7.1 思路简介  
+
+对于一个 $n\times n$ 的方阵 A（$$|\textbf{A}|\neq 0$$），可以根据伴随矩阵来求逆，即
+
+$$
+\textbf{A}^{-1}=\dfrac{1}{|\textbf{A}|}\textbf{A}^*
+$$
+其中 $\textbf{A}^*$ 是A的伴随矩阵，其计算方法为
+$$
+a^*_{ij}=(-1)^{i+j}|\textbf{A}_{ji}|
+$$
+ $\textbf{A}_{ji}$ 表示矩阵 $\textbf{A}$ 将第 $j$ 行和第 $i$ 列删除后得到的子矩阵。若$$|\textbf{A}|= 0$$或矩阵不为方阵，则不能求逆，报错。
+
+#### 2.7.2 代码实现  
+
+#### 2.7.3 输出示例  
+
+
+
+
+
+### 2.8 矩阵求秩的实现  
+
+#### 2.8.1 思路简介  
+
+本算法利用高斯消元法将矩阵通过一系列行变换化为行阶梯形形式，从而统计非零行的数量作为矩阵的秩。  
+
+#### 2.8.2 代码实现  
+
+``````c
+int rank_matrix(Matrix a){
+    Matrix c=create_matrix(a.rows,a.cols);
+    for(int i=0;i<a.rows;i++) {
+        for(int j=0;j<a.cols;j++) {
+            c.data[i][j]=a.data[i][j];
+        }
+    }  
+    int row=0;// row 记录当前已处理的主元行数（秩计数）    
+    /*
+    对每一列执行高斯‑乔丹消元，直到行或列耗尽
+    */ 
+    for (int ii = 0; ii < a.cols && row < a.rows; ii++) {  
+        // 在第 ii 列中，从第 row 行往下选取绝对值最大的主元行 Num  
+        int Num=row;
+        for(int jj=row+1;jj<a.rows;jj++) {
+            if(fabs(c.data[jj][ii])>fabs(c.data[Num][ii])) Num=jj;
+        } 
+        if(fabs(c.data[Num][ii])==0)continue;// 若该列所有元素均为 0，则跳过此列  
+        if(Num!=row){
+            for(int z=0;z<a.cols;z++){
+                double t=c.data[row][z];
+                c.data[row][z]=c.data[Num][z];
+                c.data[Num][z]=t;
+            }
+        }// 若主元不在当前这一列行，则交换两行  
+        double xx=c.data[row][ii];
+        for(int k=ii;k<a.cols;k++)c.data[row][k]/=xx;  //主元归一化
+        for(int kk=0;kk<a.rows;kk++){
+            if(kk!=row){
+                double mul=c.data[kk][ii];
+                for(int j=ii;j<a.cols;j++){
+                    c.data[kk][j]-=mul*c.data[row][j];
+                }
+            }
+        }//高斯消元
+        row++;  
+     }
+     int rank=row;
+     for (int i = 0; i < c.rows; i++) {
+         free(c.data[i]);
+     }
+     free(c.data);
+     return rank; 
+}
+``````
+
+#### 2.8.3 输出示例  
+
+<img src="./doc/rank/r1.png">    <img src="./doc/rank/r2.png">    <img src="./doc/rank/r3.png">    
+
+
+
+### 2.9 矩阵求迹的实现  
+
+#### 2.9.1 思路简介  
+
+主对角线上的元素相加即为矩阵的秩。
+
+#### 2.9.2 代码实现  
+
+``````c
+double trace_matrix(Matrix a)
+{
+    if (a.rows !=a.cols) {
+        printf("Error: The matrix must be a square matrix.\n");
+        return 0.0;
+    }
+    double sum=0.0;
+    for (int i=0;i<a.rows;i++) {
+        sum+=a.data[i][i];
+    }
+    return sum;
+}
+``````
+
+#### 2.9.3 输出示例  
+
+<img src="./doc/trace/j1.png">    <img src="./doc/trace/j2.png">    <img src="./doc/trace/j3.png">    
+
+---
+
+## __第一次内训作业终于写完了！__ :tada::tada::tada:
