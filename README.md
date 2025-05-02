@@ -159,5 +159,138 @@ Matrix mul_matrix(Matrix a, Matrix b)
 
 #### 2.3.3 输出示例  
 
+<img src="./doc/mul/mul1.png">    <img src="./doc/mul/mul2.png">    <img src="./doc/mul/mul3.png">
 
+
+
+### 2.4 数乘的实现  
+
+#### 2.4.1 思路简介  
+
+矩阵的数乘运算即将一个常数与一个矩阵相乘。得到的结果矩阵中每个元素与原矩阵元素一一对应，元素的值为原矩阵元素的值乘所给常数。
+
+#### 2.4.2 代码实现  
+
+``````c
+Matrix scale_matrix(Matrix a, double k)//main.c中，k为常数2
+{
+    Matrix c=create_matrix(a.rows,a.cols);
+    for (int i=0;i<c.rows;i++) {
+        for (int j=0;j<c.cols;j++) {
+            c.data[i][j]=a.data[i][j]*k;
+        }
+    }
+    return c;
+}
+/*
+每个元素依次遍历乘k
+*/
+``````
+
+#### 2.4.3 输出示例  
+
+<img src="./doc/scale/.1.png">    <img src="./doc/scale/.2.png">  
+
+
+
+### 2.5 转置的实现  
+
+#### 2.5.1 思路简介  
+
+矩阵的转置即将m$ \times$n的矩阵A转换成n$ \times$m的矩阵B，其中A和B的元素对应关系为：
+$$
+a_{ij}=b_{ji}
+$$
+
+#### 2.5.2 代码实现  
+
+``````c
+Matrix transpose_matrix(Matrix a)
+{
+    Matrix c=create_matrix(a.cols,a.rows);
+    for (int i=0;i<a.rows;i++) {
+        for (int j=0;j<a.cols;j++) {
+            c.data[j][i]=a.data[i][j];
+        }
+    }
+    return c;
+}
+``````
+
+#### 2.5.3输出示例  
+
+<img src="./doc/transpose/t1.png">    <img src="./doc/transpose/t2.png">
+
+
+
+### 2.6 行列式求解的实现  
+
+#### 2.6.1 思路简介  
+
+行列式的求解可以用按列展开的方法进行。将一列中每个元素$a_{ij}$与其代数余子式相乘，即可将n阶行列式化为（n-1）阶行列式相加，具体思路如下述数学表达所示：
+$$
+C_{ij}=(-1)^{i+j}\,M_{ij}\\
+
+    \det(A)=\sum_{i=1}^{n} a_{ij}\,C_{ij}
+    =\sum_{i=1}^{n} a_{ij}(-1)^{i+j}M_{ij}.
+$$
+在后续代码中，我将始终以第一列展开，逐步将行列式降阶求解。同时，行列式需是方阵，若矩阵的行数与列数不相等，则不能进行行列式求解，会报错。
+
+在代码实现中，可以采用递归的思想对方阵进行不断的降阶。
+
+#### 2.6.2 代码实现  
+
+``````c
+double det_matrix(Matrix a)
+{
+    if (a.rows!=a.cols) {
+        printf("Error: The matrix must be a square matrix.\n");
+        return 0.0;
+    }
+    /*
+    行数与列数不相等，则无法进行行列式求解，报错
+    */
+    else if(a.rows==1&&a.cols==1){
+        return a.data[0][0];
+    }//递归的终点为一维方阵
+    else{
+        double sum=0.0;
+        double pn_num=1.0;
+        for (int i=0;i<a.rows;i++){
+            Matrix c=create_matrix(a.rows-1,a.cols-1);
+            for(int j=0;j<a.rows;j++){
+                if(i==j)continue;
+                for(int k=1;k<a.cols;k++){
+                    if(j<i){
+                        c.data[j][k-1]=a.data[j][k];
+                    }
+                    else{
+                        c.data[j-1][k-1]=a.data[j][k];
+                    }
+                }
+            }
+            //求第一列某元素对应的余子式
+            double row_num=0.0;
+            row_num=a.data[i][0]*pn_num*det_matrix(c);
+            //元素乘自己的代数余子式为按列展开的一项
+            for (int i = 0; i < c.rows; i++) {
+                free(c.data[i]);
+            }//释放存储空间，防止在高维情况下出错
+            free(c.data);
+            sum+=row_num;
+            pn_num=-pn_num;
+        }
+        //按第一列的每个元素一一遍历
+        return sum;
+    }
+}
+``````
+
+#### 2.6.3 输出示例  
+
+<img src="./doc/det/d1.png">    <img src="./doc/det/d2.png">    <img src="./doc/det/d3.png">    <img src="./doc/det/d4.png">  
+
+
+
+### 2.7 矩阵求逆的实现  
 
