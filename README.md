@@ -309,9 +309,56 @@ $$
 
 #### 2.7.2 代码实现  
 
+``````c
+Matrix inv_matrix(Matrix a)
+{
+    if(a.rows != a.cols){
+        printf("Error: The matrix must be a square matrix.\n");
+        Matrix c=create_matrix(0,0);
+        return c;
+    }//若不是方阵则不能求逆
+    double det=det_matrix(a);
+    if(det==0.0){
+        printf("Error: The matrix is singular.\n");
+        Matrix c=create_matrix(0, 0);
+        return c;
+    }//若行列式为0，则逆矩阵不存在
+    Matrix bs=create_matrix(a.rows, a.cols);//初始化伴随矩阵
+    for(int i=0;i<a.rows;i++){
+        for(int j=0;j<a.cols;j++){
+            Matrix m=create_matrix(a.rows-1, a.cols-1);
+            for(int r=0;r<a.rows;r++){
+                if (r==j) continue;
+                int row_in_m =r<j ? r:r-1;
+                for(int c=0;c<a.cols;c++){
+                    if(c==i)continue;
+                    int col_in_m=c<i ? c:c-1;
+                    m.data[row_in_m][col_in_m]=a.data[r][c];
+                }
+            }
+            /*
+            遍历矩阵的每个元素，计算对应的代数余子式
+            */
+            double mdet=det_matrix(m);
+            bs.data[i][j]=((i+j)%2==0 ? 1:-1) * mdet;
+        }
+    }
+    Matrix inv=create_matrix(a.rows,a.cols);
+    for (int i=0;i<a.rows;i++) {
+        for (int j=0;j<a.cols;j++) {
+            inv.data[j][i]=bs.data[i][j] / det; 
+        }
+    }
+    /*
+    转置伴随矩阵并除以行列式，得到逆矩阵
+    */
+    return inv;
+}
+``````
+
 #### 2.7.3 输出示例  
 
-
+<img src="./doc/inv/i1.png">    <img src="./doc/inv/i2.png">    <img src="./doc/inv/i3.png">    <img src="./doc/inv/i4.png">
 
 
 

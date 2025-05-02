@@ -131,61 +131,39 @@ Matrix inv_matrix(Matrix a)
 {
     if (a.rows != a.cols) {
         printf("Error: The matrix must be a square matrix.\n");
-        return create_matrix(0, 0);
+        Matrix c = create_matrix(0, 0);
+        return c;
     }
-
-    // 1×1 矩阵的逆矩阵
-    if (a.rows == 1 && a.cols == 1) {
-        Matrix inv = create_matrix(1, 1);
-        inv.data[0][0] = 1 / a.data[0][0];
-        return inv;
-    }
-
-    // 计算行列式
     double det = det_matrix(a);
-    if (det == 0) {
+    if (det == 0.0) {
         printf("Error: The matrix is singular.\n");
-        return create_matrix(0, 0);
+        Matrix c = create_matrix(0, 0);
+        return c;
     }
-
-    // 按余子式公式计算逆矩阵
-    Matrix inv = create_matrix(a.rows, a.cols);
-    int i, j;
-    for (i = 0; i < a.rows; i++) {
-        for (j = 0; j < a.cols; j++) {
-            // 构造去掉第 i 行、第 j 列的子矩阵
-            Matrix subMatrix = create_matrix(a.rows - 1, a.cols - 1);
-            getCofactor(a.rows, a.data, subMatrix.data, i, j);
-            // 代数余子式并除以行列式
-            inv.data[j][i] = pow(-1, i + j) * det_matrix(subMatrix) / det;
+    Matrix bs = create_matrix(a.rows, a.cols);
+    for (int i = 0; i < a.rows; i++) {
+        for (int j = 0; j < a.cols; j++) {
+            Matrix m = create_matrix(a.rows - 1, a.cols - 1);
+            for (int r = 0; r < a.rows; r++) {
+                if (r == j) continue;
+                int row_in_m = r < j ? r : r - 1;
+                for (int c = 0; c < a.cols; c++) {
+                    if (c == i) continue;
+                    int col_in_m = c < i ? c : c - 1;
+                    m.data[row_in_m][col_in_m] = a.data[r][c];
+                }
+            }
+            double mdet = det_matrix(m);
+            bs.data[i][j] = ((i + j) % 2 == 0 ? 1 : -1) * mdet;
         }
     }
-
+    Matrix inv = create_matrix(a.rows, a.cols);
+    for (int i = 0; i < a.rows; i++) {
+        for (int j = 0; j < a.cols; j++) {
+            inv.data[j][i] = bs.data[i][j] / det; // 转置伴随矩阵
+        }
+    }
     return inv;
-}
-void getCofactor(int n,
-    double mat[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE],
-    double temp[MAX_MATRIX_SIZE][MAX_MATRIX_SIZE],
-    int p, int q)
-{
-int i = 0, j = 0;
-int row, col;
-
-// 遍历整个矩阵
-for (row = 0; row < n; row++) {
-for (col = 0; col < n; col++) {
-// 只复制不在第 p 行、第 q 列的元素
-if (row != p && col != q) {
-   temp[i][j++] = mat[row][col];
-
-   // 当临时矩阵一行填满时，移动到下一行
-   if (j == n - 1) {
-       j = 0;
-       i++;
-   }
-}
-}
-}
 }
 
 int rank_matrix(Matrix a)
